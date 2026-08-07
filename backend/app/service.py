@@ -441,10 +441,10 @@ class BlockQuestService:
         try:
             token_totals = self.analytics.session_token_totals(learner_id)
             question_counts = self.analytics.session_question_counts(learner_id)
-            call_counts = self.analytics.session_call_counts(learner_id)
+            strategy_averages = self.analytics.session_strategy_token_averages(learner_id)
         except Exception as exc:  # noqa: BLE001
             logger.warning("analytics read failed: %s", exc)
-            token_totals, question_counts, call_counts = {}, {}, {}
+            token_totals, question_counts, strategy_averages = {}, {}, {}
 
         sessions = list(token_totals) or list(question_counts)
         first = sessions[0] if sessions else None
@@ -459,10 +459,8 @@ class BlockQuestService:
         if tokens_s1 and tokens_s2:
             reduction = round((1 - tokens_s2 / tokens_s1) * 100)
 
-        calls_s1 = call_counts.get(first, 0) if first else 0
-        calls_s2 = call_counts.get(latest, 0) if latest else 0
-        avg_s1 = round(tokens_s1 / calls_s1) if calls_s1 else 0
-        avg_s2 = round(tokens_s2 / calls_s2) if calls_s2 else 0
+        avg_s1 = strategy_averages.get(first, 0) if first else 0
+        avg_s2 = strategy_averages.get(latest, 0) if latest else 0
         per_call_reduction = (
             round((1 - avg_s2 / avg_s1) * 100) if avg_s1 and avg_s2 else 0
         )

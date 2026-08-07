@@ -118,15 +118,19 @@ def new_session(learner_id: str) -> dict[str, str]:
     """
     state = session_store.start_new_session(learner_id)
 
-    # The next thing that happens is the first question of the new session, and
-    # under EverOS that retrieval takes ~2.6s cold. Start it now, during the
-    # seconds it takes a human to click, so the memory reveal lands instantly.
+    # This debug route is the demo's browser-refresh boundary. Finish queued
+    # writes before warming the new session so a fast scripted run cannot race
+    # the memory writer and miss the reveal. The wait belongs here, not on an
+    # answer submission where it would hurt interaction latency.
     try:
-        memory_store.prefetch_learner_context(
+        flush = getattr(memory_store, "flush", None)
+        if flush is not None:
+            flush()
+        memory_store.retrieve_learner_context(
             learner_id, exclude_session_id=state.session_id
         )
     except Exception as exc:  # noqa: BLE001
-        logger.warning("memory prefetch failed: %s", exc)
+        logger.warning("memory warmup failed: %s", exc)
 
     return {"learner_id": learner_id, "session_id": state.session_id,
             "session_number": str(state.session_number)}

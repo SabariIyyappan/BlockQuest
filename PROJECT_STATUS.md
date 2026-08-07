@@ -7,15 +7,24 @@ Updated: 2026-08-07
 - Backend API contract and FastAPI routes.
 - Adaptive question selection, mastery, misconceptions, hints, and quest progression.
 - Local memory and JSONL telemetry fallbacks.
-- EverOS-backed memory, Linux containers, prefetch, and token accounting.
-- Native test suite: 22 passing.
-- Docker test suite: 29 passing.
+- EverOS-backed memory, Linux containers, synchronized session recall, and token accounting.
+- Snowflake sink: schema initialization, asynchronous parameterized writes, aggregate reads, and JSONL fallback.
+- Native test suite: 26 passing.
+- Docker test suite: 33 passing.
 - EverOS probe: import, configure, memorize/search, session filtering, and recall passing.
+- Backend Session 1 to Session 2 demo validated.
 
-## Next
+## Validated demo result
 
-- Implement and validate the Snowflake analytics sink and schema.
-- Run and document the backend-only Session 1 to Session 2 demo.
+- Questions: 4 to 3.
+- Session tokens: 774 to 207 (73% reduction).
+- Average strategy-selection tokens: 186 to 69 (63% reduction).
+- Recalled strategy: visual block groups.
+- Memory source: EverOS.
+
+## External validation pending
+
+- Live Snowflake connection and table inspection require account credentials. No credentials are currently configured.
 
 ## Pending: frontend dependency
 

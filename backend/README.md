@@ -17,11 +17,11 @@ EverOS validation runs in Linux containers:
 
 ```bash
 docker compose run --rm probe  # real memorize/search round-trip
-docker compose run --rm tests  # 29 tests including EverOS integration
+docker compose run --rm tests  # 33 tests including EverOS + Snowflake contracts
 ```
 
 ```bash
-pytest -q          # 22 native tests, ~1s
+pytest -q          # 26 native tests, ~1s
 ```
 
 ## Layout
