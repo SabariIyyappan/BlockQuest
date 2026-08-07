@@ -1,0 +1,19 @@
+# BlockQuest backend — Python 3.12 (conda env: blockquest)
+
+# --- API layer ---
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-dotenv
+
+# --- Memory (hackathon requirement) ---
+# Brings its own stack: lancedb + sqlite + pyarrow + tiktoken
+everos
+
+# --- Data warehouse / economics ---
+snowflake-connector-python
+
+# --- Dev / test ---
+pytest
+httpx
