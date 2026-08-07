@@ -37,7 +37,7 @@ def build_analytics_sink() -> AnalyticsSink:
         try:
             from .snowflake_sink import SnowflakeAnalyticsSink  # noqa: PLC0415
 
-            return SnowflakeAnalyticsSink()
+            return SnowflakeAnalyticsSink(settings.telemetry_dir)
         except Exception as exc:  # noqa: BLE001 - any failure means fall back
             logger.warning(
                 "snowflake sink unavailable (%s); falling back to local jsonl", exc

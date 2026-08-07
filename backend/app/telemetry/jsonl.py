@@ -134,6 +134,22 @@ class JsonlAnalyticsSink:
             counts[sid] = counts.get(sid, 0) + 1
         return dict(counts)
 
+    def session_strategy_token_averages(self, learner_id: str) -> dict[str, int]:
+        """Average select-strategy cost per session.
+
+        Comparing the same call type isolates memory compression. Session-wide
+        averages mix in explanations and memory writes that only occur on some
+        paths and can reverse the result despite memory doing less work.
+        """
+        totals: OrderedDict[str, int] = OrderedDict()
+        counts: OrderedDict[str, int] = OrderedDict()
+        for row in self._for_learner("token_usage", learner_id):
+            if row.get("call_type") != "select_strategy":
+                continue
+            sid = row["session_id"]
+            totals[sid] = totals.get(sid, 0) + int(row["total_tokens"])
+            counts[sid] = counts.get(sid, 0) + 1
+        return {sid: round(total / counts[sid]) for sid, total in totals.items()}
     def session_question_counts(self, learner_id: str) -> dict[str, int]:
         counts: OrderedDict[str, int] = OrderedDict()
         for row in self._for_learner("attempts", learner_id):
