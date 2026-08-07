@@ -1,0 +1,254 @@
+/* Floating HUD. Nothing here reserves layout space — the world runs edge to edge. */
+
+.hud {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  padding: 16px;
+}
+
+.hud button,
+.hud a {
+  pointer-events: auto;
+}
+
+.hud__left {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+
+.hud__right {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.hud__top {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ---------------------------------------------------------------- surfaces */
+
+.hud__panel,
+.hud__quest,
+.hud__session,
+.hud__hearts,
+.hud__boss,
+.hud__blocks {
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  backdrop-filter: blur(10px) saturate(1.15);
+  box-shadow: var(--panel-shadow);
+}
+
+/* ------------------------------------------------------------- quest rail */
+
+.hud__quest {
+  padding: 10px 14px;
+  min-width: 210px;
+}
+
+.hud__questline {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.hud__questnum {
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.hud__questname {
+  font-size: 17px;
+  font-weight: 800;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.hud__pips {
+  display: flex;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.hud__pip {
+  width: 22px;
+  height: 7px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: background var(--anim-med) ease, box-shadow var(--anim-med) ease;
+}
+
+.hud__pip--on {
+  background: linear-gradient(180deg, #ffe08a, var(--gold));
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 10px rgba(242, 193, 78, 0.6);
+}
+
+.hud__blocks {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 9px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--text-dim);
+  border-radius: var(--radius-sm);
+}
+
+/* A tiny isometric block, so the counter matches the world's vocabulary. */
+.hud__blockicon {
+  width: 14px;
+  height: 14px;
+  background:
+    linear-gradient(135deg, #c98f4e 0 50%, #9c6a34 50% 100%);
+  border-top: 2px solid #e0a86a;
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------- meters */
+
+.hud__session {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.hud__session--2 {
+  border-color: rgba(197, 160, 255, 0.55);
+  box-shadow: 0 0 18px rgba(150, 110, 255, 0.35);
+}
+
+.hud__sessiontag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #d8c2ff;
+}
+
+.hud__hearts {
+  display: flex;
+  gap: 4px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 15px;
+  color: #ff8f93;
+}
+
+.hud__heart--dim {
+  opacity: 0.25;
+}
+
+.hud__settings {
+  display: flex;
+  gap: 6px;
+}
+
+.hud__btn {
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--text);
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: transform var(--anim-fast) ease, border-color var(--anim-fast) ease;
+}
+
+.hud__btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--gold);
+}
+
+/* ------------------------------------------------------------- boss bar */
+
+.hud__boss {
+  padding: 10px 18px;
+  text-align: center;
+  min-width: 320px;
+  border-color: rgba(167, 123, 255, 0.4);
+  animation: popIn var(--anim-med) ease-out;
+}
+
+.hud__bossname {
+  font-size: 12px;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #c9a0ff;
+}
+
+.hud__shields {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.hud__shield {
+  width: 34px;
+  height: 10px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #c4a0ff, var(--golem));
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.7);
+  transition: all var(--anim-med) ease;
+}
+
+.hud__shield--broken {
+  background: #3a3350;
+  box-shadow: none;
+  opacity: 0.5;
+  transform: scaleY(0.5);
+}
+
+/* The golem's own voice. Monospace so it reads as something machine-broken. */
+.hud__taunt {
+  margin-top: 9px;
+  font-family: 'Consolas', 'SF Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #e3d4ff;
+  opacity: 0.85;
+  max-width: 420px;
+  animation: fadeIn var(--anim-slow) ease-out;
+}
+
+.hud__boss--down .hud__taunt,
+.hud__boss--down .hud__bossname {
+  opacity: 0.35;
+  text-decoration: line-through;
+}
+
+@media (max-width: 700px) {
+  .hud__quest {
+    min-width: 0;
+  }
+  .hud__boss {
+    min-width: 0;
+    max-width: 60vw;
+  }
+  .hud__blocks {
+    display: none;
+  }
+}

@@ -1,23 +1,31 @@
+/*
+ * The question card floats over the live world, so it is a glass panel rather
+ * than an opaque box, and it is sized by its content instead of filling a
+ * column. It caps at half the viewport so the world is never fully hidden.
+ */
 .qpanel {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 20px;
-  height: 100%;
+  gap: 12px;
+  padding: 16px 18px;
+  max-height: 52vh;
   min-height: 0;
-  background: var(--bg-panel);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-edge);
+  border-radius: 16px;
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: var(--panel-shadow);
 }
 
 /* Question content scrolls if it grows; the answers never do. */
 .qpanel__scroll {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  align-items: center;
+  gap: 12px;
 }
 
 .qpanel__footer {
@@ -28,8 +36,11 @@
 }
 
 .qpanel--loading {
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 12px;
+  min-height: 88px;
   color: var(--text-dim);
 }
 
@@ -51,11 +62,14 @@
   font-size: 21px;
   line-height: 1.35;
   font-weight: 700;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Two-mistake simplification: calmer, bigger, less to look at. */
 .qpanel--calm {
-  background: #1a2a2e;
+  background: rgba(16, 36, 38, 0.9);
+  border-color: rgba(62, 207, 109, 0.3);
 }
 
 .qpanel--calm .qpanel__text {
@@ -78,9 +92,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 18px 12px;
-  background: var(--bg-panel-2);
+  gap: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius);
 }
 
@@ -190,8 +206,8 @@
 
 .answers {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
 }
 
 /* Two options stay side by side — bigger targets without going below the fold. */
@@ -199,28 +215,42 @@
   grid-template-columns: 1fr 1fr;
 }
 
+/*
+ * Answer buttons are carved blocks, not form controls — same material language
+ * as the world they build.
+ */
 .answer {
-  padding: 20px;
+  position: relative;
+  padding: 16px 20px;
   font-size: 28px;
   font-weight: 800;
   font-family: inherit;
   color: var(--text);
-  background: var(--bg-panel-2);
-  border: 2px solid var(--border);
-  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  border-bottom-width: 4px;
+  border-bottom-color: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
   cursor: pointer;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   transition: transform var(--anim-fast) ease, background var(--anim-fast) ease,
-    border-color var(--anim-fast) ease;
+    border-color var(--anim-fast) ease, box-shadow var(--anim-fast) ease;
 }
 
 .answers--two .answer {
-  padding: 28px 20px;
+  padding: 24px 20px;
   font-size: 36px;
 }
 
 .answer:hover:not(:disabled) {
   transform: translateY(-2px);
   border-color: var(--gold);
+  box-shadow: 0 6px 20px rgba(242, 193, 78, 0.28);
+}
+
+.answer:active:not(:disabled) {
+  transform: translateY(1px);
+  border-bottom-width: 2px;
 }
 
 .answer:disabled {

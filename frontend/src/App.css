@@ -1,43 +1,68 @@
+/* Full-bleed: the world is the page. Everything else floats on top of it. */
+
 .app {
-  position: relative;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/*
+ * The lower stage holds Pip's dialogue and the question card. It is centred and
+ * width-capped so the world stays visible either side of it on wide screens.
+ */
+.app__stage {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  z-index: 20;
+
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: min(1240px, 100%);
-  height: min(820px, 100vh);
-  margin: 0 auto;
-  padding: 14px;
+  align-items: stretch;
+  gap: 10px;
+
+  width: min(760px, calc(100vw - 32px));
+  padding: 0 0 18px;
+  pointer-events: none;
 }
 
-.app__main {
-  flex: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(360px, 1fr);
-  gap: 12px;
-  min-height: 0;
-}
-
-.app__scene {
-  position: relative;
-  min-height: 0;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
+.app__stage > * {
+  pointer-events: auto;
 }
 
 .app__question {
-  min-height: 0;
+  animation: cardRise var(--anim-med) cubic-bezier(0.2, 0.9, 0.25, 1) backwards;
 }
 
-/* Below the two-panel breakpoint, stack scene over questions. */
-@media (max-width: 900px) {
-  .app {
-    height: auto;
+@keyframes cardRise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
   }
-  .app__main {
-    grid-template-columns: 1fr;
+  to {
+    opacity: 1;
+    transform: none;
   }
-  .app__scene {
-    height: 360px;
+}
+
+/* Screen-reader-only text — used where a typewriter animates the visible copy. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 700px) {
+  .app__stage {
+    width: calc(100vw - 16px);
+    padding-bottom: 10px;
   }
 }

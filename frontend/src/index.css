@@ -13,17 +13,12 @@ body,
 
 body {
   margin: 0;
+  overflow: hidden; /* the world is fixed full-bleed; the page never scrolls */
   font-family: var(--font);
   font-size: var(--font-size-base);
   color: var(--text);
-  background:
-    radial-gradient(ellipse at 50% 0%, #1d2740 0%, var(--bg) 60%);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
-}
-
-#root {
-  display: flex;
-  justify-content: center;
 }
 
 button {

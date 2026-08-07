@@ -1,0 +1,12 @@
+.world-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+
+  /* The sky gradient is painted by the engine; this only covers the first
+     frame before the loop starts. */
+  background: #131a2a;
+}

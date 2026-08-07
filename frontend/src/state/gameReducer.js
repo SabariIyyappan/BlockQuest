@@ -48,7 +48,15 @@ export function initialState(sessionNumber) {
     summary: null,
 
     lowStim: false,
+    muted: false,
     questionShownAt: null,
+
+    // Story surface. `dialogue` is whatever Pip is currently saying; the id
+    // lets the dialogue box restart its typewriter on a repeated line.
+    dialogue: null,
+    dialogueId: 0,
+    golemTaunt: null,
+    memorySpoken: false,
   }
 }
 
@@ -138,6 +146,22 @@ export function gameReducer(state, action) {
 
     case 'TOGGLE_LOW_STIM':
       return { ...state, lowStim: !state.lowStim }
+
+    case 'TOGGLE_MUTE':
+      return { ...state, muted: !state.muted }
+
+    /** Pip speaks. See story/dialogue.js — the engine never speaks directly. */
+    case 'SAY':
+      if (!action.line) return state
+      return {
+        ...state,
+        dialogue: action.line,
+        dialogueId: state.dialogueId + 1,
+        memorySpoken: state.memorySpoken || action.isMemory === true,
+      }
+
+    case 'GOLEM_TAUNT':
+      return { ...state, golemTaunt: action.text }
 
     case 'SET_NARRATIVE':
       return { ...state, narrative: action.text }

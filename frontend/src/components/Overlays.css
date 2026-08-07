@@ -1,3 +1,7 @@
+/*
+ * Overlays sit over the live world, so the scrim is deliberately thin — the
+ * bridge you just built should still be visible behind the card that says so.
+ */
 .overlay {
   position: absolute;
   inset: 0;
@@ -6,33 +10,43 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(10, 14, 24, 0.86);
-  backdrop-filter: blur(5px);
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(8, 12, 24, 0.55) 0%,
+    rgba(6, 9, 20, 0.86) 75%
+  );
+  backdrop-filter: blur(3px);
   animation: fadeIn var(--anim-med) ease-out;
 }
 
 .overlay__card {
-  width: min(480px, 100%);
-  padding: 30px;
+  width: min(520px, 100%);
+  padding: 32px;
   text-align: center;
-  border-radius: 18px;
-  background: linear-gradient(160deg, var(--bg-panel) 0%, #161d2e 100%);
-  border: 1px solid var(--border);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(28, 36, 56, 0.94) 0%, rgba(18, 24, 42, 0.96) 100%);
+  border: 1px solid var(--glass-edge);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   animation: popIn var(--anim-med) cubic-bezier(0.2, 1.1, 0.4, 1);
+}
+
+/* Session 2's opening card carries the memory colour from the first frame. */
+.overlay__card--warm {
+  border-color: rgba(197, 160, 255, 0.5);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6), 0 0 50px rgba(150, 110, 255, 0.28);
 }
 
 .overlay__badge {
   display: inline-block;
-  padding: 5px 12px;
-  margin-bottom: 14px;
+  padding: 5px 14px;
+  margin-bottom: 16px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  background: var(--bg-panel-2);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-edge);
   color: var(--text-dim);
 }
 
@@ -42,42 +56,63 @@
   color: #8dedaf;
 }
 
+.overlay__badge--memory {
+  background: rgba(150, 110, 255, 0.2);
+  border-color: rgba(197, 160, 255, 0.6);
+  color: #e0ccff;
+}
+
 .overlay__title {
   margin: 0 0 8px;
-  font-size: 34px;
+  font-size: 38px;
+  line-height: 1.1;
   color: var(--gold);
+  text-shadow: 0 3px 18px rgba(242, 193, 78, 0.3);
 }
 
 .overlay__sub {
-  margin: 0 0 16px;
+  margin: 0 0 18px;
   color: var(--text-dim);
   font-style: italic;
 }
 
 .overlay__body {
-  margin: 0 0 22px;
-  line-height: 1.5;
+  margin: 0 0 14px;
+  line-height: 1.55;
+}
+
+.overlay__meta {
+  margin: 0 0 24px;
+  font-size: 13px;
+  color: var(--text-dim);
 }
 
 .overlay__btn {
-  padding: 14px 30px;
+  padding: 15px 32px;
   font-family: inherit;
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 800;
   color: #0e1626;
-  background: var(--gold);
+  background: linear-gradient(180deg, #ffe08a, var(--gold));
   border: none;
+  border-bottom: 4px solid #b8912f;
   border-radius: var(--radius);
   cursor: pointer;
-  transition: transform var(--anim-fast) ease;
+  transition: transform var(--anim-fast) ease, box-shadow var(--anim-fast) ease;
 }
 
 .overlay__btn:hover {
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(242, 193, 78, 0.4);
+}
+
+.overlay__btn:active {
+  transform: translateY(1px);
+  border-bottom-width: 2px;
 }
 
 .overlay__hint {
-  margin: 16px 0 0;
+  margin: 18px 0 0;
   font-size: 12px;
   color: var(--text-dim);
 }
@@ -85,17 +120,32 @@
 .overlay__hint code {
   padding: 2px 5px;
   border-radius: 4px;
-  background: var(--bg-panel-2);
+  background: rgba(255, 255, 255, 0.08);
   font-family: ui-monospace, 'Cascadia Code', monospace;
 }
 
+/* ------------------------------------------------------------- transition */
+
 .overlay--transition {
-  background: rgba(10, 14, 24, 0.96);
+  background: rgba(6, 9, 20, 0.92);
+  backdrop-filter: blur(6px);
+}
+
+.overlay__transwrap {
+  text-align: center;
+  animation: popIn var(--anim-slow) ease-out;
+}
+
+.overlay__transnum {
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
 }
 
 .overlay__transtext {
-  font-size: 30px;
+  font-size: 36px;
   font-weight: 800;
   color: var(--gold);
-  animation: popIn var(--anim-slow) ease-out;
 }

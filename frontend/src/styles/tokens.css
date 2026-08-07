@@ -9,6 +9,13 @@
   --text: #eef2ff;
   --text-dim: #9aa8c7;
 
+  /* Floating surfaces. Everything in the UI sits over the live world, so panels
+     are translucent and blurred rather than opaque boxes. */
+  --glass: rgba(18, 24, 42, 0.72);
+  --glass-strong: rgba(14, 19, 34, 0.88);
+  --glass-edge: rgba(255, 255, 255, 0.14);
+  --panel-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+
   /* Brand / world */
   --grass: #4c9a4a;
   --grass-dark: #3a7a38;
@@ -47,7 +54,29 @@
   --anim-slow: 0ms;
   --block-stagger: 0ms;
   --font-size-base: 18px;
-  filter: saturate(0.5);
+  /* Panels go opaque: no blur, no translucency competing with the text. */
+  --glass: #161d31;
+  --glass-strong: #10162a;
+  --glass-edge: #3a4666;
+}
+
+/* The canvas desaturates itself in low-stim mode (see engine/palette.js), so
+   only the UI layer needs the filter — applying it to .app would double up. */
+.low-stim .hud,
+.low-stim .app__stage,
+.low-stim .overlay {
+  filter: saturate(0.55);
+}
+
+.low-stim .dialogue__frame,
+.low-stim .hud__quest,
+.low-stim .hud__session,
+.low-stim .hud__hearts,
+.low-stim .hud__boss,
+.low-stim .hud__blocks,
+.low-stim .hud__btn,
+.low-stim .qpanel {
+  backdrop-filter: none;
 }
 
 .low-stim *,
