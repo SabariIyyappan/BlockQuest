@@ -1,0 +1,71 @@
+:root {
+  /* Surfaces */
+  --bg: #131a2a;
+  --bg-panel: #1c2438;
+  --bg-panel-2: #232d45;
+  --border: #33405e;
+
+  /* Text */
+  --text: #eef2ff;
+  --text-dim: #9aa8c7;
+
+  /* Brand / world */
+  --grass: #4c9a4a;
+  --grass-dark: #3a7a38;
+  --grass-side: #2e5f2d;
+  --water: #2f6fb5;
+  --water-dark: #24548a;
+  --wood: #b3763a;
+  --wood-dark: #8a5a2b;
+  --wood-side: #6b451f;
+  --stone: #7b879e;
+
+  /* Semantics */
+  --correct: #3ecf6d;
+  --wrong: #f0605a;
+  --gold: #f2c14e;
+  --golem: #8b5cf6;
+  --golem-dark: #6d3fd4;
+
+  /* Motion — the low-stim toggle zeroes these out */
+  --anim-fast: 180ms;
+  --anim-med: 350ms;
+  --anim-slow: 600ms;
+  --block-stagger: 150ms;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+
+  --font: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+  --font-size-base: 16px;
+}
+
+/* Low-stimulation mode: no motion, muted colour, larger text, no decoration. */
+.low-stim {
+  --anim-fast: 0ms;
+  --anim-med: 0ms;
+  --anim-slow: 0ms;
+  --block-stagger: 0ms;
+  --font-size-base: 18px;
+  filter: saturate(0.5);
+}
+
+.low-stim *,
+.low-stim *::before,
+.low-stim *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+.low-stim .decorative {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --anim-fast: 0ms;
+    --anim-med: 0ms;
+    --anim-slow: 0ms;
+    --block-stagger: 0ms;
+  }
+}

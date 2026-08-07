@@ -1,0 +1,15 @@
+# Local npm cache (redirected here because C: was full)
+.npm-cache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# EverOS local memory store
+everos_data/
+
+# Env
+.env
+.env.local

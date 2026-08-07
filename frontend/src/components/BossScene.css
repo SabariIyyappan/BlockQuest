@@ -1,0 +1,104 @@
+.boss {
+  position: absolute;
+  width: 120px;
+}
+
+.boss__healthbar {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.boss__segment {
+  flex: 1;
+  height: 10px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #ff7a72 0%, #e0433c 100%);
+  transition: opacity var(--anim-med) ease, transform var(--anim-med) ease;
+}
+
+.boss__segment--broken {
+  opacity: 0.18;
+  transform: scaleY(0.4);
+  background: #4a5468;
+}
+
+.boss__body {
+  position: relative;
+  width: 120px;
+  height: 110px;
+  border-radius: 18px;
+  background: linear-gradient(160deg, var(--golem) 0%, var(--golem-dark) 100%);
+  box-shadow: inset 0 -10px 0 rgba(0, 0, 0, 0.22), 0 12px 26px rgba(0, 0, 0, 0.4);
+  animation: golemFloat 2.4s ease-in-out infinite;
+}
+
+.boss__body--hit {
+  animation: shake var(--anim-med) ease-in-out;
+}
+
+.boss__eye {
+  position: absolute;
+  top: 34px;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: #fff59a;
+  box-shadow: 0 0 12px rgba(255, 245, 154, 0.8);
+}
+.boss__eye--l { left: 22px; }
+.boss__eye--r { left: 76px; }
+
+.boss__mouth {
+  position: absolute;
+  top: 72px;
+  left: 34px;
+  width: 52px;
+  height: 12px;
+  border-radius: 3px;
+  background: #2a153f;
+}
+
+/* A drifting scanline band to sell the "glitch" idea. */
+.boss__glitch {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 8px;
+  top: 40%;
+  background: rgba(255, 255, 255, 0.28);
+  mix-blend-mode: overlay;
+  animation: golemFloat 1.1s linear infinite;
+}
+
+.boss__particles {
+  position: relative;
+  width: 120px;
+  height: 110px;
+}
+
+.boss__particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--golem);
+  animation: particleFly var(--anim-slow) ease-out forwards;
+}
+
+.boss__victory {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--gold);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+  animation: popIn var(--anim-slow) ease-out backwards;
+  animation-delay: 400ms;
+}

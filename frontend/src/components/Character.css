@@ -1,0 +1,45 @@
+.character {
+  position: absolute;
+  width: 28px;
+  height: 46px;
+  /* Movement between tiles is a position transition, so walking is one line. */
+  transition: left var(--anim-slow) ease-in-out, top var(--anim-slow) ease-in-out;
+}
+
+.character--walking .character__body,
+.character--walking .character__head {
+  animation: walkBob 420ms ease-in-out infinite;
+}
+
+.character__head {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: linear-gradient(160deg, #ffd9a8 0%, #e8b57e 100%);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.character__body {
+  position: absolute;
+  top: 17px;
+  left: 2px;
+  width: 24px;
+  height: 26px;
+  border-radius: 5px;
+  background: linear-gradient(160deg, #4aa3f0 0%, #2f7fc4 100%);
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.18);
+}
+
+.character__shadow {
+  position: absolute;
+  bottom: -6px;
+  left: 2px;
+  width: 24px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.28);
+  filter: blur(2px);
+}

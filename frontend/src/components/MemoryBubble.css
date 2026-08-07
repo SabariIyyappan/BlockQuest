@@ -1,0 +1,50 @@
+.membubble {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
+  width: min(460px, 88%);
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  background: linear-gradient(160deg, #3a3016 0%, #2a2410 100%);
+  border: 2px solid var(--gold);
+  animation: popIn var(--anim-med) ease-out, goldPulse 2.6s ease-in-out infinite;
+}
+
+/* Speech-bubble tail pointing down at the character. */
+.membubble::after {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  left: 42px;
+  width: 18px;
+  height: 18px;
+  background: #2a2410;
+  border-right: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  transform: rotate(45deg);
+}
+
+.membubble__tag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.membubble__text {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #fff3d4;
+}
+
+.membubble__source {
+  margin-top: 7px;
+  font-size: 11px;
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  color: rgba(242, 193, 78, 0.65);
+}

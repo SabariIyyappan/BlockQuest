@@ -1,0 +1,43 @@
+.app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(1240px, 100%);
+  height: min(820px, 100vh);
+  margin: 0 auto;
+  padding: 14px;
+}
+
+.app__main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(360px, 1fr);
+  gap: 12px;
+  min-height: 0;
+}
+
+.app__scene {
+  position: relative;
+  min-height: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.app__question {
+  min-height: 0;
+}
+
+/* Below the two-panel breakpoint, stack scene over questions. */
+@media (max-width: 900px) {
+  .app {
+    height: auto;
+  }
+  .app__main {
+    grid-template-columns: 1fr;
+  }
+  .app__scene {
+    height: 360px;
+  }
+}

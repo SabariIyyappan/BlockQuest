@@ -1,0 +1,31 @@
+@import './styles/tokens.css';
+@import './styles/animations.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--font-size-base);
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 50% 0%, #1d2740 0%, var(--bg) 60%);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  font-family: inherit;
+}

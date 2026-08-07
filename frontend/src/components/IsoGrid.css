@@ -1,0 +1,27 @@
+.isogrid {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(ellipse at 50% 30%, #24314e 0%, #161d30 70%);
+}
+
+.isogrid__stage {
+  position: relative;
+}
+
+.isogrid--shake {
+  animation: shake var(--anim-med) ease-in-out;
+}
+
+.isogrid__redflash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  animation: redFlash var(--anim-slow) ease-out;
+  border-radius: var(--radius);
+}

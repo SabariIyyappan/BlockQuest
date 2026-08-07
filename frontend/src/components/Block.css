@@ -1,0 +1,64 @@
+.block {
+  position: absolute;
+}
+
+.block--drop {
+  animation: blockDrop var(--anim-med) cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
+}
+
+.block__top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 64px;
+  height: 32px;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* The two visible vertical faces. Trapezoids clipped from the lower half. */
+.block__side {
+  position: absolute;
+  top: 16px;
+  width: 32px;
+  height: 42px;
+}
+
+.block__side--left {
+  left: 0;
+  clip-path: polygon(0% 0%, 100% 50%, 100% 100%, 0% 50%);
+}
+
+.block__side--right {
+  left: 32px;
+  clip-path: polygon(0% 50%, 100% 0%, 100% 50%, 0% 100%);
+}
+
+.block--wood .block__top {
+  background: linear-gradient(160deg, #c9884a 0%, var(--wood) 100%);
+}
+.block--wood .block__side--left {
+  background: var(--wood-dark);
+}
+.block--wood .block__side--right {
+  background: var(--wood-side);
+}
+
+.block--stone .block__top {
+  background: linear-gradient(160deg, #93a0b8 0%, var(--stone) 100%);
+}
+.block--stone .block__side--left {
+  background: #5d6880;
+}
+.block--stone .block__side--right {
+  background: #4a5468;
+}
+
+.block--gold .block__top {
+  background: linear-gradient(160deg, #ffe08a 0%, var(--gold) 100%);
+}
+.block--gold .block__side--left {
+  background: #d9a832;
+}
+.block--gold .block__side--right {
+  background: #b88a22;
+}

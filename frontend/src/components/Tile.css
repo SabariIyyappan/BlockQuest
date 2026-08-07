@@ -1,0 +1,56 @@
+.tile {
+  position: absolute;
+}
+
+.tile__face {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* A couple of px of darker ground below the diamond gives the world thickness. */
+.tile__skirt {
+  position: absolute;
+  inset: 0;
+  top: 5px;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  z-index: -1;
+  opacity: 0.55;
+}
+
+.tile--grass .tile__face {
+  background: linear-gradient(160deg, var(--grass) 0%, var(--grass-dark) 100%);
+}
+.tile--grass .tile__skirt {
+  background: var(--grass-side);
+}
+
+.tile--water .tile__face {
+  background: linear-gradient(160deg, var(--water) 0%, var(--water-dark) 100%);
+}
+.tile--water .tile__skirt {
+  background: var(--water-dark);
+}
+
+.tile--stone .tile__face {
+  background: linear-gradient(160deg, var(--stone) 0%, #5d6880 100%);
+}
+.tile--stone .tile__skirt {
+  background: #4a5468;
+}
+
+/* Marks a slot where a block is still missing. Deliberately high-contrast: the
+   player needs to see what they're building toward from across a room.
+   Drawn as a gold diamond with a smaller dark diamond punched out of the
+   middle, which reads as an outline ring while keeping the iso silhouette. */
+.tile--ghost .tile__face {
+  background: rgba(242, 193, 78, 0.85);
+}
+
+.tile--ghost .tile__skirt {
+  top: 0;
+  z-index: 2;
+  opacity: 1;
+  background: #1b2438;
+  transform: scale(0.74);
+}
