@@ -13,8 +13,15 @@ uvicorn app.main:app --reload --port 8000
 
 Interactive docs at http://localhost:8000/docs, health at `/health`.
 
+EverOS validation runs in Linux containers:
+
 ```bash
-pytest -q          # 20 tests, ~1s
+docker compose run --rm probe  # real memorize/search round-trip
+docker compose run --rm tests  # 29 tests including EverOS integration
+```
+
+```bash
+pytest -q          # 22 native tests, ~1s
 ```
 
 ## Layout

@@ -56,13 +56,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-memory_store = build_memory_store()
 analytics_sink = build_analytics_sink()
+
+# The EverOS store reports its own extraction cost, and the only thing that
+# knows how to book that is the service — which does not exist yet. A late-bound
+# closure breaks the cycle without making either side aware of the other.
+_service: "BlockQuestService | None" = None
+
+
+def _on_memory_write_cost(observation, prompt_tokens: int) -> None:
+    if _service is not None:
+        _service.record_memory_write_cost(observation, prompt_tokens)
+
+
+memory_store = build_memory_store(on_llm_usage=_on_memory_write_cost)
 service = BlockQuestService(
     memory=memory_store,
     analytics=analytics_sink,
     sessions=session_store,
 )
+_service = service
 
 
 @app.get("/health")
@@ -104,5 +117,16 @@ def new_session(learner_id: str) -> dict[str, str]:
     exactly the condition the Session 2 reveal is supposed to prove.
     """
     state = session_store.start_new_session(learner_id)
+
+    # The next thing that happens is the first question of the new session, and
+    # under EverOS that retrieval takes ~2.6s cold. Start it now, during the
+    # seconds it takes a human to click, so the memory reveal lands instantly.
+    try:
+        memory_store.prefetch_learner_context(
+            learner_id, exclude_session_id=state.session_id
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("memory prefetch failed: %s", exc)
+
     return {"learner_id": learner_id, "session_id": state.session_id,
             "session_number": str(state.session_number)}

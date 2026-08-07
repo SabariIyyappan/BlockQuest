@@ -1,0 +1,74 @@
+# Phase 3: the backend running on Linux so EverOS can actually import.
+#
+#   docker compose up --build api      # serve on http://localhost:8000
+#   docker compose run --rm probe      # verify EverOS round-trips
+#   docker compose run --rm tests      # the behaviour suite, EverOS-backed
+#
+# Memory and telemetry live in named volumes, so the Session 2 reveal survives
+# a container restart the same way it survives a browser refresh.
+#
+# On EVEROS_LLM__*: EverOS calls get_llm_client() unconditionally inside
+# memorize(), so an api_key AND base_url are mandatory — there is no keyless
+# path. Until a real key exists, these point at tools/fake_llm.py, which speaks
+# the same OpenAI protocol. Set EVEROS_LLM__API_KEY and EVEROS_LLM__BASE_URL in
+# a .env beside this file on hackathon day and the stub drops out.
+
+x-everos-llm: &everos-llm
+  EVEROS_LLM__API_KEY: ${EVEROS_LLM__API_KEY:-stub-key-not-a-secret}
+  EVEROS_LLM__BASE_URL: ${EVEROS_LLM__BASE_URL:-http://llm-stub:9099/v1}
+  EVEROS_LLM__MODEL: ${EVEROS_LLM__MODEL:-gpt-4.1-mini}
+
+services:
+  # Stands in for an OpenAI-compatible provider. Harmless to leave running.
+  llm-stub:
+    build:
+      context: ./backend
+    command: ["python", "tools/fake_llm.py"]
+    expose:
+      - "9099"
+
+  api:
+    build:
+      context: ./backend
+    depends_on:
+      - llm-stub
+    ports:
+      - "8000:8000"
+    environment:
+      <<: *everos-llm
+      BQ_MEMORY_BACKEND: everos
+      BQ_ANALYTICS_SINK: jsonl
+      BQ_EVEROS_SEARCH_METHOD: keyword
+      EVEROS_ROOT: /data/everos
+    volumes:
+      - everos_data:/data/everos
+      - telemetry_data:/data/telemetry
+
+  # One-shot: proves memorize() -> search() actually round-trips in this image.
+  probe:
+    build:
+      context: ./backend
+    depends_on:
+      - llm-stub
+    environment:
+      <<: *everos-llm
+      EVEROS_ROOT: /data/everos
+    volumes:
+      - everos_data:/data/everos
+    command: ["python", "tools/probe_everos.py"]
+
+  # The same behaviour suite, but with the real memory layer underneath.
+  tests:
+    build:
+      context: ./backend
+    depends_on:
+      - llm-stub
+    environment:
+      <<: *everos-llm
+      BQ_MEMORY_BACKEND: everos
+      EVEROS_ROOT: /data/everos-test
+    command: ["pytest", "-q"]
+
+volumes:
+  everos_data:
+  telemetry_data:

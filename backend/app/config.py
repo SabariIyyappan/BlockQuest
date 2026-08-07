@@ -27,6 +27,19 @@ class Settings(BaseSettings):
     memory_backend: str = "local"
     memory_dir: Path = BACKEND_ROOT / "memory_data"
 
+    # EverOS namespacing — these become directory names under EVEROS_ROOT, so
+    # they are restricted to a path-safe charset upstream.
+    everos_app_id: str = "blockquest"
+    everos_project_id: str = "tutor"
+    # keyword | vector | hybrid | agentic. Keyword is the only one that works
+    # without an LLM/embedding key configured, so it is the safe default.
+    everos_search_method: str = "keyword"
+    everos_top_k: int = 20
+    # Force EverOS's extraction pipeline on every write. Needs a real LLM key;
+    # without one the write fails outright. Off by default — retrieval reads
+    # EverOS's unprocessed buffer too, so memory works either way.
+    everos_flush_on_write: bool = False
+
     # "jsonl" — append-only local log. "snowflake" — the real warehouse.
     analytics_sink: str = "jsonl"
     telemetry_dir: Path = BACKEND_ROOT / "telemetry_data"

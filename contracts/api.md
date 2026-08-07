@@ -19,6 +19,8 @@ ignores them keeps working.
 | `hint_text` | `/next-challenge` | Backend composes the `hint_level: 1` string. Frontend renders it verbatim instead of hardcoding copy. |
 | `worked_example` | `/next-challenge` | Array of steps for `hint_level: 2`. Frontend animates one step per 500ms (task A2.4). |
 | `session_id` | `/next-challenge` | Lets the frontend show which session it's in, and makes backend logs traceable from the browser. |
+| `avg_tokens_per_call_session1` / `..._session2` | `/session-summary` | Session totals mix two effects — cheaper calls *and* fewer of them. Per-call isolates the one memory is actually responsible for. |
+| `per_call_reduction_pct` | `/session-summary` | The defensible headline number. Use this if a judge pushes on the totals. |
 
 ---
 
@@ -123,6 +125,9 @@ ignores them keeps working.
   "tokens_session1": 2840,
   "tokens_session2": 1650,
   "token_reduction_pct": 42,
+  "avg_tokens_per_call_session1": 207,
+  "avg_tokens_per_call_session2": 69,
+  "per_call_reduction_pct": 67,
   "strategy_retrieved": "visual block groups",
   "memory_source": "EverOS",
   "facts_mastered": ["3x4", "3x5", "4x6", "6x3"],

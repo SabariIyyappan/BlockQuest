@@ -79,6 +79,12 @@ class SessionSummaryResponse(BaseModel):
     tokens_session1: int
     tokens_session2: int
     token_reduction_pct: int
+    # Session totals conflate two effects: memory makes each call cheaper, and
+    # it also means fewer calls. Per-call is the defensible number — it isolates
+    # the saving that comes from memory alone.
+    avg_tokens_per_call_session1: int = 0
+    avg_tokens_per_call_session2: int = 0
+    per_call_reduction_pct: int = 0
     strategy_retrieved: str
     memory_source: str
     facts_mastered: list[str]

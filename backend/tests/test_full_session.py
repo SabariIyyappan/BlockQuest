@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import pytest
 
+from app.memory.base import Observation
 from app.memory.local import LocalMarkdownMemory
 from app.models import NextChallengeRequest, SubmitAnswerRequest
 from app.service import BlockQuestService, QuestionNotFoundError
@@ -278,6 +279,47 @@ def test_session_summary_reports_a_real_reduction(service):
     assert summary.tokens_session2 > 0
     assert summary.mastery_after > 0
     assert summary.pricing_cta.endswith("$12/month.")
+
+
+def test_summary_reports_per_call_cost_not_just_totals(service):
+    """Totals mix 'cheaper calls' with 'fewer calls'. Per-call separates them."""
+    for _ in range(3):
+        challenge = ask(service)
+        answer(service, challenge, challenge.correct_answer)
+
+    service.sessions.start_new_session(LEARNER)
+    for _ in range(2):
+        challenge = ask(service)
+        answer(service, challenge, challenge.correct_answer)
+
+    summary = service.session_summary(LEARNER)
+    assert summary.avg_tokens_per_call_session1 > 0
+    assert summary.avg_tokens_per_call_session2 > 0
+    assert (
+        summary.avg_tokens_per_call_session2 < summary.avg_tokens_per_call_session1
+    ), "memory must make each call cheaper, not merely reduce their number"
+    assert summary.per_call_reduction_pct > 0
+
+
+def test_memory_write_cost_is_booked_against_the_session(service):
+    """Storing a memory is an LLM call under EverOS. It must not be free here."""
+    observation = Observation(
+        learner_id=LEARNER,
+        kind="correction",
+        topic="multiplication",
+        event="alex answered 3 × 4 correctly as 12 after support",
+        effective_support="groups",
+        context="Quest 1 (Bridge), groups format",
+        session_id="s-write-cost",
+    )
+    service.record_memory_write_cost(observation, prompt_tokens=88)
+
+    rows = service.analytics._for_learner("token_usage", LEARNER)
+    written = [r for r in rows if r["call_type"] == "memory_write"]
+    assert len(written) == 1
+    assert written[0]["total_tokens"] == 88
+    assert written[0]["session_id"] == "s-write-cost"
+    assert written[0]["memory_was_used"] is False, "a write pays for memory, it doesn't use it"
 
 
 def test_reveal_card_reports_mastered_facts(service):

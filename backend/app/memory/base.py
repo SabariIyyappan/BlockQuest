@@ -121,6 +121,20 @@ class MemoryStore(Protocol):
         exclude_session_id: str | None = None,
     ) -> LearnerContext: ...
 
+    def prefetch_learner_context(
+        self,
+        learner_id: str,
+        topic: str = "multiplication",
+        exclude_session_id: str | None = None,
+    ) -> None:
+        """Optional hint that a retrieval is coming. Free to ignore.
+
+        Only EverOS implements this meaningfully — it is the one backend where
+        retrieval is slow enough to matter. Reading a local file is not worth
+        warming, so the other stores no-op.
+        """
+        return None
+
 
 class NullMemoryStore:
     """Remembers nothing. The honest baseline — this is Session 1 behaviour."""

@@ -72,6 +72,31 @@ class BlockQuestService:
         except Exception as exc:  # noqa: BLE001
             logger.warning("analytics write failed: %s", exc)
 
+    def record_memory_write_cost(
+        self, observation: Observation, prompt_tokens: int
+    ) -> None:
+        """Log what it cost to *write* a memory.
+
+        EverOS's `memorize()` runs an extraction model, so remembering is not
+        free. Booking it against the same session it belongs to keeps the
+        comparison honest: the answer to "doesn't storing the memory cost
+        tokens too?" is yes, it's in the table, and the saving survives it.
+        """
+        self._safe_log(
+            self.analytics.log_token_usage,
+            TokenUsageRow(
+                learner_id=observation.learner_id,
+                session_id=observation.session_id or "unknown",
+                call_type="memory_write",
+                model_used="everos_extraction",
+                prompt_tokens=prompt_tokens,
+                completion_tokens=0,
+                total_tokens=prompt_tokens,
+                # A write is the price of memory, not a beneficiary of it.
+                memory_was_used=False,
+            ),
+        )
+
     # --- POST /next-challenge --------------------------------------------
 
     def next_challenge(self, req: NextChallengeRequest) -> NextChallengeResponse:
@@ -416,9 +441,10 @@ class BlockQuestService:
         try:
             token_totals = self.analytics.session_token_totals(learner_id)
             question_counts = self.analytics.session_question_counts(learner_id)
+            call_counts = self.analytics.session_call_counts(learner_id)
         except Exception as exc:  # noqa: BLE001
             logger.warning("analytics read failed: %s", exc)
-            token_totals, question_counts = {}, {}
+            token_totals, question_counts, call_counts = {}, {}, {}
 
         sessions = list(token_totals) or list(question_counts)
         first = sessions[0] if sessions else None
@@ -432,6 +458,14 @@ class BlockQuestService:
         reduction = 0
         if tokens_s1 and tokens_s2:
             reduction = round((1 - tokens_s2 / tokens_s1) * 100)
+
+        calls_s1 = call_counts.get(first, 0) if first else 0
+        calls_s2 = call_counts.get(latest, 0) if latest else 0
+        avg_s1 = round(tokens_s1 / calls_s1) if calls_s1 else 0
+        avg_s2 = round(tokens_s2 / calls_s2) if calls_s2 else 0
+        per_call_reduction = (
+            round((1 - avg_s2 / avg_s1) * 100) if avg_s1 and avg_s2 else 0
+        )
 
         context = LearnerContext()
         try:
@@ -455,6 +489,9 @@ class BlockQuestService:
             tokens_session1=tokens_s1,
             tokens_session2=tokens_s2,
             token_reduction_pct=reduction,
+            avg_tokens_per_call_session1=avg_s1,
+            avg_tokens_per_call_session2=avg_s2,
+            per_call_reduction_pct=per_call_reduction,
             strategy_retrieved=context.strategy_label,
             memory_source=context.source if context.found else self.memory.backend_name,
             facts_mastered=mastered,

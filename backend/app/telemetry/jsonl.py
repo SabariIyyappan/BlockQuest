@@ -120,6 +120,20 @@ class JsonlAnalyticsSink:
             totals[sid] = totals.get(sid, 0) + int(row["total_tokens"])
         return dict(totals)
 
+    def session_call_counts(self, learner_id: str) -> dict[str, int]:
+        """{session_id: number of metered AI calls}.
+
+        Not the same as question count — a wrong answer adds an `explain` call,
+        and an EverOS write adds a `memory_write` one. Dividing tokens by this
+        gives cost per call, which is what isolates the effect of memory from
+        the effect of simply asking fewer questions.
+        """
+        counts: OrderedDict[str, int] = OrderedDict()
+        for row in self._for_learner("token_usage", learner_id):
+            sid = row["session_id"]
+            counts[sid] = counts.get(sid, 0) + 1
+        return dict(counts)
+
     def session_question_counts(self, learner_id: str) -> dict[str, int]:
         counts: OrderedDict[str, int] = OrderedDict()
         for row in self._for_learner("attempts", learner_id):
